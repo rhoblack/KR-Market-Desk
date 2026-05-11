@@ -1,13 +1,14 @@
 'use client';
 
-import { MOCK_WATCHLIST } from '@/lib/mock';
+import type { Stock } from '@/types';
 import { fmt, dirColor, dirArrow } from '@/lib/format';
 
 interface WatchlistGridProps {
+  stocks: Stock[];
   onPickStock: (code: string) => void;
 }
 
-export function WatchlistGrid({ onPickStock }: WatchlistGridProps) {
+export function WatchlistGrid({ stocks, onPickStock }: WatchlistGridProps) {
   return (
     <div className="panel">
       <div className="panel-head">
@@ -15,7 +16,7 @@ export function WatchlistGrid({ onPickStock }: WatchlistGridProps) {
         <div className="panel-sub">탭하여 차트 분석</div>
       </div>
       <div className="wl-grid">
-        {MOCK_WATCHLIST.slice(0, 6).map(s => (
+        {stocks.slice(0, 6).map(s => (
           <button
             key={s.code}
             className="wl-card"

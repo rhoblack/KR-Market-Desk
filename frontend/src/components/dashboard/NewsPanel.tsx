@@ -1,4 +1,4 @@
-import { MOCK_MARKET_NEWS } from '@/lib/mock';
+import type { NewsItem } from '@/types';
 import { Tag } from '@/components/ui/Tag';
 import { ImpactDot } from '@/components/ui/ImpactDot';
 
@@ -14,7 +14,11 @@ function categoryTone(category: string): TagTone {
   }
 }
 
-export function NewsPanel() {
+interface NewsPanelProps {
+  news: NewsItem[];
+}
+
+export function NewsPanel({ news }: NewsPanelProps) {
   return (
     <div className="panel news-panel">
       <div className="panel-head">
@@ -22,8 +26,8 @@ export function NewsPanel() {
         <div className="panel-sub">시장 · 기업 · 정책 · 글로벌</div>
       </div>
       <ul className="news-list">
-        {MOCK_MARKET_NEWS.map(n => (
-          <li key={n.id} className="news-item">
+        {news.map((n, i) => (
+          <li key={n.id ?? i} className="news-item">
             <div className="news-meta">
               {n.category && (
                 <Tag tone={categoryTone(n.category)}>{n.category}</Tag>

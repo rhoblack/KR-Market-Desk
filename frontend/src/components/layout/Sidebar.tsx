@@ -1,11 +1,20 @@
 'use client';
 import { useRouter, usePathname } from 'next/navigation';
+import { useWatchlist } from '@/lib/queries';
 import { MOCK_WATCHLIST } from '@/lib/mock';
 import { fmt, dirColor, dirArrow } from '@/lib/format';
+
+const WATCHLIST_CODES = [
+  '005930', '000660', '035420', '035720', '207940',
+  '005380', '051910', '373220',
+];
 
 export function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
+
+  const { data } = useWatchlist(WATCHLIST_CODES);
+  const stocks = data ?? MOCK_WATCHLIST;
 
   return (
     <aside className="sidebar">
@@ -39,10 +48,10 @@ export function Sidebar() {
 
         <div className="nav-section">
           <div className="nav-label">
-            관심 종목 <span className="nav-count">{MOCK_WATCHLIST.length}</span>
+            관심 종목 <span className="nav-count">{stocks.length}</span>
           </div>
           <div className="watchlist">
-            {MOCK_WATCHLIST.map(s => (
+            {stocks.map(s => (
               <button
                 key={s.code}
                 className={`wl-row ${pathname === `/stocks/${s.code}` ? 'active' : ''}`}
@@ -65,7 +74,7 @@ export function Sidebar() {
       </nav>
 
       <div className="sidebar-foot">
-        <div className="foot-row"><span>데이터</span><span className="foot-val">Mock</span></div>
+        <div className="foot-row"><span>데이터</span><span className="foot-val">{data ? 'Live' : 'Mock'}</span></div>
         <div className="foot-row"><span>환경</span><span className="foot-val">개발</span></div>
       </div>
     </aside>

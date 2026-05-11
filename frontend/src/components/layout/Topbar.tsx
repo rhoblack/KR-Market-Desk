@@ -1,15 +1,19 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useIndices } from '@/lib/queries';
 import { MOCK_INDICES } from '@/lib/mock';
 import { fmt, dirColor, dirArrow } from '@/lib/format';
 
 export function Topbar() {
-  const [now, setNow] = useState(new Date(2026, 4, 11, 14, 35, 12));
+  const [now, setNow] = useState(new Date(2026, 4, 12, 14, 35, 12));
 
   useEffect(() => {
     const id = setInterval(() => setNow(n => new Date(n.getTime() + 1000)), 1000);
     return () => clearInterval(id);
   }, []);
+
+  const { data } = useIndices();
+  const indices = data ?? MOCK_INDICES;
 
   const h = now.getHours(), m = now.getMinutes();
   const minutes = h * 60 + m;
@@ -26,7 +30,7 @@ export function Topbar() {
         </span>
       </div>
       <div className="ticker-strip">
-        {MOCK_INDICES.map(idx => (
+        {indices.map(idx => (
           <div key={idx.code} className="ticker-item">
             <span className="ticker-name">{idx.name}</span>
             <span className="ticker-value">{fmt.price(idx.value)}</span>

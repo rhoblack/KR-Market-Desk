@@ -2,23 +2,44 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useStock, useCandles, useTechnical, useStockNews } from '@/lib/queries';
+import { MOCK_WATCHLIST, MOCK_CANDLES, MOCK_TECHNICAL, MOCK_STOCK_NEWS } from '@/lib/mock';
 import { StockHeader } from './StockHeader';
 import { CandleChart } from './CandleChart';
 import { TechnicalPanel } from './TechnicalPanel';
 import { StockNewsPanel } from './StockNewsPanel';
-import type { Stock, Candle, TechnicalAnalysis, NewsItem } from '@/types';
 
 interface StockViewProps {
-  stock: Stock;
-  candles: Candle[];
-  levels: { support: number; resistance: number };
-  analysis: TechnicalAnalysis | undefined;
-  news: NewsItem[];
+  code: string;
 }
 
-export function StockView({ stock, candles, levels, analysis, news }: StockViewProps) {
+export function StockView({ code }: StockViewProps) {
   const [tab, setTab] = useState<'technical' | 'news'>('technical');
+  const [candlePeriod] = useState('3M');
   const router = useRouter();
+
+  const stockQuery = useStock(code);
+  const candlesQuery = useCandles(code, candlePeriod);
+  const technicalQuery = useTechnical(code);
+  const stockNewsQuery = useStockNews(code);
+
+  // API 실패 시 mock 데이터 fallback
+  const mockStock = MOCK_WATCHLIST.find(s => s.code === code);
+  const stock = stockQuery.data ?? mockStock;
+  const candles = candlesQuery.data ?? MOCK_CANDLES[code] ?? [];
+  const analysis = technicalQuery.data ?? MOCK_TECHNICAL[code];
+  const news = stockNewsQuery.data ?? MOCK_STOCK_NEWS[code] ?? [];
+  const levels = analysis?.levels ?? { support: 0, resistance: 0 };
+
+  if (!stock) {
+    return (
+      <div className="stock-not-found">
+        <div className="stock-not-found-icon">◎</div>
+        <p>종목을 찾을 수 없습니다</p>
+        <span className="stock-not-found-code">{code}</span>
+      </div>
+    );
+  }
 
   return (
     <div className="stock-view">
