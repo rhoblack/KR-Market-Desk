@@ -41,5 +41,5 @@
 - [x] 9단계: 반응형 + 로딩 스켈레톤 + 마무리 polish
 - [x] 10단계: 백엔드 — FastAPI 골격 + KIS REST 클라이언트
 - [x] 11단계: 백엔드 — pykrx SQLite 캐시 + 캔들 API + pandas-ta 기술적 지표
-- [ ] 12단계: 백엔드 — 네이버 뉴스 RSS + KIS WebSocket 실시간
+- [x] 12단계: 백엔드 — 네이버 뉴스 RSS + KIS WebSocket 실시간
 - [ ] 13단계: 프론트엔드 ↔ 백엔드 연결 (mock.ts → API 교체)

@@ -22,8 +22,9 @@ from fastapi.middleware.cors import CORSMiddleware
 # .env 파일 로드 — main.py 와 동일 디렉토리에 있어야 함
 load_dotenv()
 
-from routers import candles, indices, movers, stocks, technical
+from routers import candles, indices, movers, news, stocks, technical, ws
 from services.kis_client import KISClient
+from services.kis_ws import get_broker
 
 # ---------------------------------------------------------------------------
 # 로거 설정
@@ -58,10 +59,16 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     has_key = bool(os.environ.get("KIS_APP_KEY"))
     logger.info("KIS API 모드: %s | 자격증명: %s", mode, "설정됨" if has_key else "미설정")
 
+    # KIS WebSocket 브로커 시작 (자격증명 있을 때만 KIS WS 연결)
+    ws_broker = get_broker()
+    app.state.ws_broker = ws_broker
+    await ws_broker.start()
+
     yield  # 앱 실행 구간
 
     # 종료 처리
     logger.info("백엔드 서버 종료 중...")
+    await ws_broker.stop()
     await kis_client.aclose()
     logger.info("KIS HTTP 클라이언트 정상 종료.")
 
@@ -106,6 +113,8 @@ app.include_router(stocks.router,    prefix="/api", tags=["stocks"])
 app.include_router(movers.router,    prefix="/api", tags=["movers"])
 app.include_router(candles.router,   prefix="/api", tags=["candles"])
 app.include_router(technical.router, prefix="/api", tags=["technical"])
+app.include_router(news.router,      prefix="/api", tags=["news"])
+app.include_router(ws.router,        tags=["websocket"])  # /ws/realtime (prefix 없음)
 
 
 # ---------------------------------------------------------------------------
