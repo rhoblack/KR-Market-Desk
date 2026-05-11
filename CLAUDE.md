@@ -7,7 +7,7 @@
 ```
 4. 주식 매매 분석/
 ├── frontend/          # Next.js 16 + TypeScript (개발 중)
-├── backend/           # FastAPI (Python) — 미구현
+├── backend/           # FastAPI (Python) — 골격 + KIS REST 클라이언트 구현 완료
 ├── stock_dashboard_template/  # 원본 프로토타입 (참고용, 수정 금지)
 └── dev.bat            # 개발 서버 실행 + 브라우저 오픈
 ```
@@ -38,6 +38,8 @@
 - [x] 6단계: 종목 상세 — 캔들차트 (Lightweight Charts)
 - [x] 7단계: 종목 상세 — 기술적 분석 패널
 - [x] 8단계: 종목 상세 — 관련 뉴스 탭
-- [ ] 9단계: 반응형 + 로딩 스켈레톤 + 마무리 polish
-- [ ] 10단계: 백엔드 (FastAPI) 구현
-- [ ] 11단계: 프론트엔드 ↔ 백엔드 연결
+- [x] 9단계: 반응형 + 로딩 스켈레톤 + 마무리 polish
+- [x] 10단계: 백엔드 — FastAPI 골격 + KIS REST 클라이언트
+- [x] 11단계: 백엔드 — pykrx SQLite 캐시 + 캔들 API + pandas-ta 기술적 지표
+- [ ] 12단계: 백엔드 — 네이버 뉴스 RSS + KIS WebSocket 실시간
+- [ ] 13단계: 프론트엔드 ↔ 백엔드 연결 (mock.ts → API 교체)
